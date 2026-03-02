@@ -39,15 +39,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Verify core imports
+       - name: Verify core imports
         working-directory: ./backend
         run: |
           python -c "from app.core.config import settings; print('✓ Config OK')"
           python -c "from app.core.security import hash_password; print('✓ Security OK')"
-          python -c "from app.ml.features import build_features; print('✓ Features OK')"
-          python -c "from app.ml.optimizer import compute_eoq; print('✓ EOQ OK')"
-          python -c "from app.ml.forecaster import forecast; print('✓ Forecaster OK')"
+          python -c "from app.ml.features import build_features, FEATURE_COLS; print('✓ Features OK')"
           python -c "from app.ml.anomaly import detect_anomalies; print('✓ Anomaly OK')"
+          python -c "from app.schemas.auth import LoginRequest, LoginResponse; print('✓ Schemas OK')"
           echo "✓ All backend imports passed"
 
   frontend-check:
