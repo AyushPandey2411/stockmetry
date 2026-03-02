@@ -65,6 +65,3 @@ dmypy.json
 # ────────────────────────────────────────────────────────────
 # PHASE 2 ADDITIONS — remove comment to include in later commits
 # ────────────────────────────────────────────────────────────
-
-# seed.py           ← add in commit 8  (uncomment that line when ready)
-# Dockerfile        ← add in commit 8
