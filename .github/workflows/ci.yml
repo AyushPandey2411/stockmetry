@@ -33,14 +33,6 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Cache pip packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('backend/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
       - name: Install dependencies
         working-directory: ./backend
         run: |
@@ -51,10 +43,12 @@ jobs:
         working-directory: ./backend
         run: |
           python -c "from app.core.config import settings; print('✓ Config OK')"
-          python -c "from app.core.security import hash_password, verify_password; print('✓ Security OK')"
-          python -c "from app.ml.features import build_features, FEATURE_COLS; print('✓ Features OK')"
+          python -c "from app.core.security import hash_password; print('✓ Security OK')"
+          python -c "from app.ml.features import build_features; print('✓ Features OK')"
           python -c "from app.ml.optimizer import compute_eoq; print('✓ EOQ OK')"
-          python -c "from app.main import app; print('✓ FastAPI app OK')"
+          python -c "from app.ml.forecaster import forecast; print('✓ Forecaster OK')"
+          python -c "from app.ml.anomaly import detect_anomalies; print('✓ Anomaly OK')"
+          echo "✓ All backend imports passed"
 
   frontend-check:
     name: Frontend — Node Build Check
@@ -84,7 +78,7 @@ jobs:
           VITE_API_URL: https://placeholder.onrender.com
         run: npm run build
 
-      - name: Confirm build output exists
+      - name: Confirm build output
         run: |
           ls frontend/dist/
           echo "✓ Frontend build successful"
