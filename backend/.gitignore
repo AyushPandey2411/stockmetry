@@ -1,0 +1,70 @@
+# ── Python ───────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# ── Virtual environment ───────────────────────────────────────
+venv/
+env/
+ENV/
+.env.backup
+.venv/
+
+# ── Environment variables (NEVER commit real secrets) ────────
+.env
+!.env.example
+
+# ── ML model files ───────────────────────────────────────────
+models/
+*.pkl
+*.joblib
+*.h5
+*.pt
+*.pth
+
+# ── Uploads ──────────────────────────────────────────────────
+uploads/
+
+# ── Database ─────────────────────────────────────────────────
+*.db
+*.sqlite
+*.sqlite3
+
+# ── Alembic auto-generated (keep versions folder) ────────────
+alembic/versions/*.pyc
+
+# ── Testing ──────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# ── MyPy ─────────────────────────────────────────────────────
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# ────────────────────────────────────────────────────────────
+# PHASE 2 ADDITIONS — remove comment to include in later commits
+# ────────────────────────────────────────────────────────────
+
+# seed.py           ← add in commit 8  (uncomment that line when ready)
+# Dockerfile        ← add in commit 8

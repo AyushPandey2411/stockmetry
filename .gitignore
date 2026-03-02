@@ -1,0 +1,30 @@
+# ── OS files ─────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ── IDE ───────────────────────────────────────────────────────
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+
+# ── Logs ─────────────────────────────────────────────────────
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ────────────────────────────────────────────────────────────
+# PHASE 2 ADDITIONS (remove these lines when ready to commit)
+# These files will be added in later commits to build history
+# ────────────────────────────────────────────────────────────
+
+# Uncomment below ONE AT A TIME as you add each commit:
+# docker-compose.yml        ← add in commit 8
+# README.md                 ← add in commit 9
