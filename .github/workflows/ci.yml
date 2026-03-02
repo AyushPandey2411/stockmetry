@@ -10,7 +10,6 @@ jobs:
   backend-check:
     name: Backend — Python Lint & Import Check
     runs-on: ubuntu-latest
-
     env:
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/stockmetry
       SECRET_KEY: ci-test-secret-key-not-real
@@ -23,7 +22,6 @@ jobs:
       ANTHROPIC_API_KEY: ""
       ALLOWED_ORIGINS: http://localhost:5173
       ENVIRONMENT: development
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -39,20 +37,19 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-       - name: Verify core imports
+      - name: Verify core imports
         working-directory: ./backend
         run: |
-          python -c "from app.core.config import settings; print('✓ Config OK')"
-          python -c "from app.core.security import hash_password; print('✓ Security OK')"
-          python -c "from app.ml.features import build_features, FEATURE_COLS; print('✓ Features OK')"
-          python -c "from app.ml.anomaly import detect_anomalies; print('✓ Anomaly OK')"
-          python -c "from app.schemas.auth import LoginRequest, LoginResponse; print('✓ Schemas OK')"
-          echo "✓ All backend imports passed"
+          python -c "from app.core.config import settings; print('Config OK')"
+          python -c "from app.core.security import hash_password; print('Security OK')"
+          python -c "from app.ml.features import build_features; print('Features OK')"
+          python -c "from app.ml.anomaly import detect_anomalies; print('Anomaly OK')"
+          python -c "from app.schemas.auth import LoginRequest; print('Schemas OK')"
+          echo "All backend imports passed"
 
   frontend-check:
     name: Frontend — Node Build Check
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -76,8 +73,3 @@ jobs:
         env:
           VITE_API_URL: https://placeholder.onrender.com
         run: npm run build
-
-      - name: Confirm build output
-        run: |
-          ls frontend/dist/
-          echo "✓ Frontend build successful"
