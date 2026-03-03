@@ -4,17 +4,33 @@
 
 A production-grade full-stack platform that transforms inventory data into precise, dollar-quantified decisions using **XGBoost**, **EOQ mathematics**, **Isolation Forest**, and **Claude Sonnet**.
 
+**Live Demo → [stockmetry.vercel.app](https://stockmetry.vercel.app)**  
+**API → [stockmetry-backennd.onrender.com/health](https://stockmetry-backennd.onrender.com/health)**  
+**API Docs → [stockmetry-backennd.onrender.com/docs](https://stockmetry-backennd.onrender.com/docs)**
+
+> Backend runs on Render free tier — first load may take ~30 seconds to wake up.
+
 ---
 
-## 🚀 Quick Start
+## Demo Accounts
+
+| Role | Email | Password | Access |
+|------|-------|----------|--------|
+| Admin | admin@stockmetry.io | Admin@Stockmetry2024 | Full access |
+| Manager | manager@stockmetry.io | Manager@Stockmetry2024 | Analytics + products |
+| Analyst | analyst@stockmetry.io | Analyst@Stockmetry2024 | Read-only |
+
+---
+
+## Quick Start
 
 ### Prerequisites
-- Python 3.11+  ·  Node.js 18+  ·  PostgreSQL 15+
+Python 3.11+ · Node.js 18+ · PostgreSQL 15+
 
 ### 1. Backend
 ```bash
 cd backend
-python -m venv venv && source venv/bin/activate
+python -m venv venv && source venv/bin/activate   # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 cp .env.example .env          # Edit DATABASE_URL
 python seed.py                # Creates tables + trains models (~60s)
@@ -31,29 +47,29 @@ npm run dev                   # Opens at http://localhost:5173
 
 ---
 
-## 🌐 Deploy to Production (Free Tier)
+## Deploy to Production (Free Tier)
 
-| Service | What | Free Tier |
-|---------|------|-----------|
-| [Vercel](https://vercel.com) | Frontend | ✅ Unlimited |
-| [Render](https://render.com) | Backend API | ✅ 750 hrs/month |
-| [Supabase](https://supabase.com) | PostgreSQL | ✅ 500 MB |
+| Service | What | Free Tier | Live URL |
+|---------|------|-----------|----------|
+| [Vercel](https://vercel.com) | Frontend | Unlimited | [stockmetry.vercel.app](https://stockmetry.vercel.app) |
+| [Render](https://render.com) | Backend API | 750 hrs/month | [stockmetry-backennd.onrender.com](https://stockmetry-backennd.onrender.com) |
+| [Supabase](https://supabase.com) | PostgreSQL | 500 MB | Managed cloud |
 
-### Deploy Backend → Render
+### Deploy Backend to Render
 1. Push to GitHub
 2. New Web Service → connect repo → root: `backend/`
 3. Build: `pip install -r requirements.txt && python seed.py`
 4. Start: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
 5. Add env vars from `.env.example`
 
-### Deploy Frontend → Vercel
+### Deploy Frontend to Vercel
 1. New project → connect repo → root: `frontend/`
 2. Framework: Vite
 3. Env: `VITE_API_URL=https://your-app.onrender.com`
 
 ---
 
-## 🔐 Security Model
+## Security Model
 
 | Feature | Implementation |
 |---------|---------------|
@@ -66,18 +82,18 @@ npm run dev                   # Opens at http://localhost:5173
 
 ---
 
-## 📊 ML Features
+## ML Features
 
 | Engine | Algorithm | Metric |
 |--------|-----------|--------|
-| Demand Forecasting | XGBoost (28 features) | ~19% MAPE, 23% vs naive |
-| Cost Optimization | EOQ + Safety Stock | avg $26K annual savings |
-| Anomaly Detection | Isolation Forest (per-product) | z-score severity: high/medium/low |
+| Demand Forecasting | XGBoost (28 features) | ~19% MAPE, 23% better than naive baseline |
+| Cost Optimization | EOQ + Safety Stock | avg $26K annual savings per deployment |
+| Anomaly Detection | Isolation Forest (per-product) | z-score severity: high / medium / low |
 | AI Chat | Claude Sonnet + RAG | grounded in live inventory data |
 
 ---
 
-## 📁 Structure
+## Project Structure
 
 ```
 stockmetry/
@@ -91,13 +107,35 @@ stockmetry/
 │   │   └── main.py
 │   ├── seed.py         Demo data + ML training
 │   ├── requirements.txt
+│   ├── runtime.txt     Python 3.11.9 pin for Render
 │   └── Dockerfile
 └── frontend/
     ├── src/
-    │   ├── components/  layout · ui · charts
-    │   ├── pages/       Login · Dashboard · Forecasting · Optimization · Anomalies · Products · Upload · AI · About
-    │   ├── services/    Axios API client with auto-refresh
-    │   └── store/       Zustand auth store (persisted)
-    ├── package.json
-    └── vercel.json
+│   │   ├── components/  layout · ui
+│   │   ├── pages/       Login · Dashboard · Forecasting · Optimization · Anomalies · Products · Upload · AI · About
+│   │   ├── services/    Axios API client with auto-refresh interceptor
+│   │   └── store/       Zustand auth store (persisted to localStorage)
+    ├── vercel.json      SPA rewrite rules
+    └── package.json
 ```
+
+---
+
+## CI/CD
+
+GitHub Actions runs on every push to `main`:
+- **Backend** — Python 3.11 install + core module import checks
+- **Frontend** — Node 18 + TypeScript check + full Vite production build
+
+[![Stockmetry CI](https://github.com/AyushPandey2411/stockmetry/actions/workflows/ci.yml/badge.svg)](https://github.com/AyushPandey2411/stockmetry/actions/workflows/ci.yml)
+
+---
+
+## Tech Stack
+
+**Frontend** — React 18, TypeScript, Vite, Tailwind CSS, Recharts, TanStack Query, Zustand, Axios  
+**Backend** — FastAPI, SQLAlchemy, Alembic, Pydantic v2, python-jose, passlib  
+**ML** — XGBoost, scikit-learn (Isolation Forest), pandas, numpy, joblib  
+**Database** — PostgreSQL 15, asyncpg, psycopg2  
+**AI** — Anthropic Claude Sonnet API  
+**Deploy** — Vercel, Render, Supabase, GitHub Actions
