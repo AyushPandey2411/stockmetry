@@ -29,9 +29,9 @@ from app.models.anomaly import AnomalyRecord
 
 def seed_users(db):
     users = [
-        {"email":"admin@stockmetry.io",   "username":"admin",   "full_name":"Ayush Kumar",  "role":"admin",   "password":settings.ADMIN_PASSWORD,   "avatar_color":"#6366f1"},
-        {"email":"manager@stockmetry.io", "username":"manager", "full_name":"Priya Sharma", "role":"manager", "password":settings.MANAGER_PASSWORD, "avatar_color":"#10b981"},
-        {"email":"analyst@stockmetry.io", "username":"analyst", "full_name":"Rohan Mehta",  "role":"analyst", "password":settings.ANALYST_PASSWORD,  "avatar_color":"#f59e0b"},
+        {"email":"admin@stockmetry.io",   "username":"admin",   "full_name":"Ayush Pandey",  "role":"admin",   "password":settings.ADMIN_PASSWORD,   "avatar_color":"#6366f1"},
+        {"email":"manager@stockmetry.io", "username":"manager", "full_name":"Manager", "role":"manager", "password":settings.MANAGER_PASSWORD, "avatar_color":"#10b981"},
+        {"email":"analyst@stockmetry.io", "username":"analyst", "full_name":"Analyst",  "role":"analyst", "password":settings.ANALYST_PASSWORD,  "avatar_color":"#f59e0b"},
     ]
     created = 0
     for u in users:
