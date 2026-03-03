@@ -33,7 +33,7 @@ ENV/
 !.env.example
 
 # ── ML model files ───────────────────────────────────────────
-models/
+/models/
 *.pkl
 *.joblib
 *.h5
@@ -62,6 +62,3 @@ htmlcov/
 .dmypy.json
 dmypy.json
 
-# ────────────────────────────────────────────────────────────
-# PHASE 2 ADDITIONS — remove comment to include in later commits
-# ────────────────────────────────────────────────────────────
