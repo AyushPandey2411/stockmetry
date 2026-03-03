@@ -3,8 +3,9 @@
 seed.py — Stockmetry database seeder + ML model trainer.
 Run: python seed.py
 """
-import os
-import sys
+import sys, os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 import math
 import numpy as np
 import pandas as pd
