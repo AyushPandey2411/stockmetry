@@ -7,6 +7,13 @@ from .core.config import settings
 from .core.database import create_tables
 from .api.v1 import auth, products, forecasts, optimize, anomalies, analytics, ai_chat, upload
 
+from app.api.v1 import executive_summary   # add this import
+
+app.include_router(
+    executive_summary.router,
+    prefix="/api/v1/summary",
+    tags=["summary"]
+)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

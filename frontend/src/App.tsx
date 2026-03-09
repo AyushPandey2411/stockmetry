@@ -11,6 +11,10 @@ import ProductsPage from './pages/Products'
 import UploadPage from './pages/Upload'
 import AIAssistantPage from './pages/AIAssistant'
 import AboutPage from './pages/About'
+import ExecutiveSummary from "./pages/ExecutiveSummary";
+
+
+
 
 function RequireAuth({ children }: { children: JSX.Element }) {
   const token = useAuthStore(s => s.accessToken)
@@ -31,6 +35,7 @@ export default function App() {
         <Route path="upload"          element={<UploadPage />} />
         <Route path="ai"              element={<AIAssistantPage />} />
         <Route path="about"           element={<AboutPage />} />
+        <Route path="/summary" element={<ExecutiveSummary />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
