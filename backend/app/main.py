@@ -9,11 +9,6 @@ from .api.v1 import auth, products, forecasts, optimize, anomalies, analytics, a
 
 from app.api.v1 import executive_summary   # add this import
 
-app.include_router(
-    executive_summary.router,
-    prefix="/api/v1/summary",
-    tags=["summary"]
-)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -29,6 +24,13 @@ app = FastAPI(
     docs_url="/docs" if not settings.is_production else None,
     redoc_url="/redoc" if not settings.is_production else None,
 )
+
+app.include_router(
+    executive_summary.router,
+    prefix="/api/v1/summary",
+    tags=["summary"]
+)
+
 
 # ── CORS ─────────────────────────────────────────────────────
 app.add_middleware(
