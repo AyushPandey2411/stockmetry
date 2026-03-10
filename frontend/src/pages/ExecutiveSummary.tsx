@@ -40,7 +40,7 @@ export default function ExecutiveSummary() {
     useQuery<SummaryResponse>({
       queryKey: ["executive-summary"],
       queryFn: async () => {
-        const res = await api.get("/api/v1/summary/executive");
+        const res = await api.get("/summary/executive");
         setLastRefreshed(new Date());
         return res.data;
       },

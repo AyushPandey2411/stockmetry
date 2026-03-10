@@ -16,7 +16,7 @@ import os
 from app.core.database import get_db
 from app.core.dependencies import get_current_user
 from app.models.product import Product
-from app.models.demand import DemandHistory
+from app.models.demand import DemandRecord
 from app.models.forecast import Forecast
 from app.models.anomaly import Anomaly
 
@@ -71,13 +71,13 @@ async def _gather_inventory_context(db: AsyncSession) -> dict:
 
     # ── Recent demand trend (last 7 vs previous 7 days) ────────
     recent_7 = await db.execute(
-        select(func.sum(DemandHistory.quantity))
-        .where(DemandHistory.date >= today - timedelta(days=7))
+        select(func.sum(DemandRecord.quantity))
+        .where(DemandRecord.date >= today - timedelta(days=7))
     )
     prev_7 = await db.execute(
-        select(func.sum(DemandHistory.quantity))
-        .where(DemandHistory.date >= today - timedelta(days=14))
-        .where(DemandHistory.date < today - timedelta(days=7))
+        select(func.sum(DemandRecord.quantity))
+        .where(DemandRecord.date >= today - timedelta(days=14))
+        .where(DemandRecord.date < today - timedelta(days=7))
     )
 
     recent_7_total = recent_7.scalar() or 0
