@@ -64,11 +64,11 @@ async def _gather_inventory_context(db: AsyncSession) -> dict:
 
     try:
         recent_7 = await db.execute(
-            select(func.sum(DemandRecord.quantity))
+            select(func.sum(DemandRecord.demand))
             .where(DemandRecord.date >= today - timedelta(days=7))
         )
         prev_7 = await db.execute(
-            select(func.sum(DemandRecord.quantity))
+             select(func.sum(DemandRecord.demand))
             .where(DemandRecord.date >= today - timedelta(days=14))
             .where(DemandRecord.date < today - timedelta(days=7))
         )
