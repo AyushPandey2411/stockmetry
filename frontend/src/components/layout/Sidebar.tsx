@@ -1,6 +1,6 @@
 // src/components/layout/Sidebar.tsx
 import { NavLink, useNavigate } from 'react-router-dom'
-import { LayoutDashboard, TrendingUp, Package, AlertTriangle, Upload, Cpu, BarChart3, Info, LogOut, Boxes } from 'lucide-react'
+import { LayoutDashboard, TrendingUp, Package, AlertTriangle, Upload, Cpu, BarChart3, Info, LogOut, Boxes, FileText } from 'lucide-react'
 import { useAuthStore } from '../../store/authStore'
 import clsx from 'clsx'
 
@@ -12,6 +12,7 @@ const NAV = [
   { to: '/products',    icon: Package,          label: 'Products'     },
   { to: '/upload',      icon: Upload,           label: 'Upload Data'  },
   { to: '/ai',          icon: Cpu,              label: 'AI Assistant' },
+   { to: '/summary',     icon: FileText,         label: 'Exec Summary'      },
   { to: '/about',       icon: Info,             label: 'About'        },
 ]
 
