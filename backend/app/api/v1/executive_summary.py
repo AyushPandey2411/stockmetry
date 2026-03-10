@@ -25,51 +25,58 @@ async def _gather_inventory_context(db: AsyncSession) -> dict:
     products_result = await db.execute(select(Product))
     products = products_result.scalars().all()
 
-    stockout_products = [p for p in products if p.current_stock == 0]
-    critical_products = [p for p in products if 0 < p.current_stock <= (p.reorder_point or 0)]
-    healthy_products  = [p for p in products if p.current_stock > (p.reorder_point or 0)]
+    stockout_products = [p for p in products if (p.current_stock or 0) == 0]
+    critical_products = [p for p in products if 0 < (p.current_stock or 0) <= (p.reorder_point or 0)]
+    healthy_products  = [p for p in products if (p.current_stock or 0) > (p.reorder_point or 0)]
     total_stock_value = sum((p.current_stock or 0) * (p.unit_cost or 0) for p in products)
 
-    anomaly_result = await db.execute(
-        select(AnomalyRecord, Product.name)
-        .join(Product, AnomalyRecord.product_id == Product.id)
-        .where(AnomalyRecord.date >= today - timedelta(days=14))
-        .where(AnomalyRecord.severity.in_(["HIGH", "MEDIUM"]))
-        .order_by(desc(AnomalyRecord.date))
-        .limit(5)
-    )
-    recent_anomalies = anomaly_result.all()
-
-    forecast_result = await db.execute(
-        select(
-            ForecastRecord.product_id,
-            Product.name,
-            func.sum(ForecastRecord.predicted_quantity).label("total_forecast"),
-            func.avg(ForecastRecord.predicted_quantity).label("avg_daily")
+    try:
+        anomaly_result = await db.execute(
+            select(AnomalyRecord, Product.name)
+            .join(Product, AnomalyRecord.product_id == Product.id)
+            .where(AnomalyRecord.date >= today - timedelta(days=14))
+            .where(AnomalyRecord.severity.in_(["high", "medium"]))
+            .order_by(desc(AnomalyRecord.date))
+            .limit(5)
         )
-        .join(Product, ForecastRecord.product_id == Product.id)
-        .where(ForecastRecord.forecast_date >= today)
-        .where(ForecastRecord.forecast_date <= today + timedelta(days=30))
-        .group_by(ForecastRecord.product_id, Product.name)
-        .order_by(desc("total_forecast"))
-        .limit(5)
-    )
-    top_forecasts = forecast_result.all()
+        recent_anomalies = anomaly_result.all()
+    except Exception:
+        recent_anomalies = []
 
-    recent_7 = await db.execute(
-        select(func.sum(DemandRecord.quantity))
-        .where(DemandRecord.date >= today - timedelta(days=7))
-    )
-    prev_7 = await db.execute(
-        select(func.sum(DemandRecord.quantity))
-        .where(DemandRecord.date >= today - timedelta(days=14))
-        .where(DemandRecord.date < today - timedelta(days=7))
-    )
+    try:
+        forecast_result = await db.execute(
+            select(
+                ForecastRecord.product_id,
+                Product.name,
+                func.sum(ForecastRecord.forecast).label("total_forecast"),
+                func.avg(ForecastRecord.forecast).label("avg_daily")
+            )
+            .join(Product, ForecastRecord.product_id == Product.id)
+            .where(ForecastRecord.date >= today)
+            .where(ForecastRecord.date <= today + timedelta(days=30))
+            .group_by(ForecastRecord.product_id, Product.name)
+            .order_by(desc("total_forecast"))
+            .limit(5)
+        )
+        top_forecasts = forecast_result.all()
+    except Exception:
+        top_forecasts = []
 
-    recent_7_total = recent_7.scalar() or 0
-    prev_7_total   = prev_7.scalar() or 1
-
-    demand_trend_pct = round(((recent_7_total - prev_7_total) / prev_7_total) * 100, 1)
+    try:
+        recent_7 = await db.execute(
+            select(func.sum(DemandRecord.quantity))
+            .where(DemandRecord.date >= today - timedelta(days=7))
+        )
+        prev_7 = await db.execute(
+            select(func.sum(DemandRecord.quantity))
+            .where(DemandRecord.date >= today - timedelta(days=14))
+            .where(DemandRecord.date < today - timedelta(days=7))
+        )
+        recent_7_total = recent_7.scalar() or 0
+        prev_7_total   = prev_7.scalar() or 1
+        demand_trend_pct = round(((recent_7_total - prev_7_total) / prev_7_total) * 100, 1)
+    except Exception:
+        demand_trend_pct = 0.0
 
     return {
         "total_products":    len(products),
