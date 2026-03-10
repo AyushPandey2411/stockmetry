@@ -17,8 +17,8 @@ from app.core.database import get_db
 from app.core.dependencies import get_current_user
 from app.models.product import Product
 from app.models.demand import DemandRecord
-from app.models.forecast import Forecast
-from app.models.anomaly import Anomaly
+from app.models.forecast import ForecastRecord
+from app.models.anomaly import AnomalyRecord
 
 router = APIRouter()
 
@@ -43,11 +43,11 @@ async def _gather_inventory_context(db: AsyncSession) -> dict:
 
     # ── Recent anomalies (last 14 days) ────────────────────────
     anomaly_result = await db.execute(
-        select(Anomaly, Product.name)
-        .join(Product, Anomaly.product_id == Product.id)
-        .where(Anomaly.date >= today - timedelta(days=14))
-        .where(Anomaly.severity.in_(["HIGH", "MEDIUM"]))
-        .order_by(desc(Anomaly.date))
+        select(AnomalyRecord, Product.name)
+        .join(Product, AnomalyRecord.product_id == Product.id)
+        .where(AnomalyRecord.date >= today - timedelta(days=14))
+        .where(AnomalyRecord.severity.in_(["HIGH", "MEDIUM"]))
+        .order_by(desc(AnomalyRecord.date))
         .limit(5)
     )
     recent_anomalies = anomaly_result.all()
@@ -55,15 +55,15 @@ async def _gather_inventory_context(db: AsyncSession) -> dict:
     # ── Forecasts (next 30 days, highest demand products) ──────
     forecast_result = await db.execute(
         select(
-            Forecast.product_id,
+            ForecastRecord.product_id,
             Product.name,
-            func.sum(Forecast.predicted_quantity).label("total_forecast"),
-            func.avg(Forecast.predicted_quantity).label("avg_daily")
+            func.sum(ForecastRecord.predicted_quantity).label("total_forecast"),
+            func.avg(ForecastRecord.predicted_quantity).label("avg_daily")
         )
-        .join(Product, Forecast.product_id == Product.id)
-        .where(Forecast.forecast_date >= today)
-        .where(Forecast.forecast_date <= today + timedelta(days=30))
-        .group_by(Forecast.product_id, Product.name)
+        .join(Product, ForecastRecord.product_id == Product.id)
+        .where(ForecastRecord.forecast_date >= today)
+        .where(ForecastRecord.forecast_date <= today + timedelta(days=30))
+        .group_by(ForecastRecord.product_id, Product.name)
         .order_by(desc("total_forecast"))
         .limit(5)
     )
